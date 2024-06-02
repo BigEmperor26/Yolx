@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:yolx/common/global.dart';
 import 'package:yolx/generated/l10n.dart';
-
+import 'package:flutter/services.dart';
 Future<File> getLocalFile(String filename) async {
   final directory = await getApplicationCacheDirectory();
   return File('${directory.path}${Global.pathSeparator}$filename');
@@ -31,7 +31,7 @@ createDir(String dir) {
 }
 
 getPlugAssetsDir(String plugName) async {
-  if (Platform.isWindows || Platform.isLinux) {
+  if (Platform.isWindows || Platform.isLinux ) {
     String plugDir =
         'data${Global.pathSeparator}plugin${Global.pathSeparator}$plugName';
     String exePath = Platform.resolvedExecutable;
@@ -44,6 +44,15 @@ getPlugAssetsDir(String plugName) async {
     String plugDir = '${cacheDir?.path}${Global.pathSeparator}$plugName';
     createDir(plugDir);
     return plugDir;
+  } else if (Platform.isMacOS) {
+    String plugDir = 'Contents${Global.pathSeparator}Resources${Global.pathSeparator}plugin${Global.pathSeparator}$plugName';
+    String exePath = Platform.resolvedExecutable;
+    List<String> pathList = exePath.split(Global.pathSeparator);
+    pathList.removeLast();
+    pathList.removeLast();
+    pathList.removeLast();
+    pathList.add(plugDir);
+    return pathList.join(Global.pathSeparator);
   }
   return null;
 }

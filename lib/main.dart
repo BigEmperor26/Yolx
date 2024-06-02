@@ -94,7 +94,7 @@ void main() async {
     SystemChrome.setSystemUIOverlayStyle(style);
   }
   await Aria2Manager().initAria2Conf();
-  Aria2Manager().startServer();
+  await Aria2Manager().startServer();
 
   runApp(
     MultiProvider(

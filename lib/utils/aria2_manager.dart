@@ -14,15 +14,16 @@ class Aria2Manager {
   late Future<Process> cmdProcess;
   late int processPid = 0;
 
-  getAria2ExePath() async {
-    if (Platform.isWindows || Platform.isLinux) {
+  getAria2ExePath () async {
+    
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       String dir = await getPlugAssetsDir('aria2');
       String ariaName = 'yolx_aria2c';
       if (Platform.isWindows) {
         ariaName = 'yolx_aria2c.exe';
       }
       return '$dir/$ariaName';
-    } else if (Platform.isAndroid) {
+    } else if (Platform.isAndroid ) {
       final libDir = await nativeLibraryDir();
       var libPath = '$libDir/libaria2c.so';
       File file = File(libPath);
@@ -52,13 +53,14 @@ class Aria2Manager {
     }
   }
 
-  void startServer() async {
+  
+  startServer() async {
     closeServer();
     Global.rpcUrl = rpcURLValue.replaceAll('{port}', Global.rpcPort.toString());
     var exe = await getAria2ExePath();
     var conf = await getAria2ConfPath();
     // print(File(conf).existsSync());
-    if (Platform.isLinux) {
+    if (Platform.isLinux || Platform.isMacOS) {
       permission777(exe);
       permission777(conf);
     }
@@ -122,7 +124,7 @@ class Aria2Manager {
       final processResult =
           Process.runSync('taskkill', ['/F', '/T', '/IM', 'yolx_aria2c.exe']);
       killSuccess = processResult.exitCode == 0;
-    } else if (Platform.isLinux || Platform.isAndroid) {
+    } else if (Platform.isLinux || Platform.isAndroid || Platform.isMacOS) {
       final processResult = Process.runSync('killall', ['yolx_aria2c']);
       killSuccess = processResult.exitCode == 0;
     }

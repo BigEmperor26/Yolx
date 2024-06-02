@@ -77,3 +77,11 @@ releases:
           target: rpm
           obfuscate:
             split-debug-info: symbols
+  - name: macos
+    jobs:
+      - name: dmg
+        package:
+          platform: macos
+          target: dmg
+          obfuscate:
+            split-debug-info: symbols
